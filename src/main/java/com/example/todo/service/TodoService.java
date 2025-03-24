@@ -14,36 +14,42 @@ import java.util.stream.Collectors;
 
 @Service
 public class TodoService {
+
     @Autowired
     private TodoRepository todoRepository;
 
-    public List<TodoResponse> getAllTodos(){
-        return todoRepository.findAll().stream().
-                map(TodoMapper::todoResponse).
-                collect(Collectors.toList());
+    @Autowired
+    private TodoMapper todoMapper;
+
+    public List<TodoResponse> getAllTodos() {
+        return todoRepository.findAll().stream()
+                .map(todoMapper::todoResponse)
+                .collect(Collectors.toList());
     }
 
-    public TodoResponse createTodo(TodoRequest todoRequest){
-        TodoEntity todoEntity = new TodoEntity(
-                todoRequest.getTitle(),
-                todoRequest.getDescription()
-        );
+    public TodoResponse createTodo(TodoRequest todoRequest) {
+        TodoEntity todoEntity = new TodoEntity();
+        todoEntity.setTitle(todoRequest.getTitle());
+        todoEntity.setDescription(todoRequest.getDescription());
+        todoEntity.setCompleted(false);
+        todoEntity.setCreatedAt(java.time.LocalDateTime.now());
         TodoEntity savedTodo = todoRepository.save(todoEntity);
-        return TodoMapper.todoResponse(savedTodo);
+        return todoMapper.todoResponse(savedTodo);
     }
 
     public TodoResponse updateTodo(Long id, TodoRequest todoRequest) {
         TodoEntity todoEntity = todoRepository.findById(id)
                 .orElseThrow(() -> new TodoNotFoundException("Todo not found with id: " + id));
-
         todoEntity.setTitle(todoRequest.getTitle());
         todoEntity.setDescription(todoRequest.getDescription());
         TodoEntity updatedTodo = todoRepository.save(todoEntity);
-
-        return TodoMapper.toTodoResponse(updatedTodo);
+        return todoMapper.todoResponse(updatedTodo);
     }
 
     public void deleteTodo(Long id) {
+        if (!todoRepository.existsById(id)) {
+            throw new TodoNotFoundException("Todo not found with id: " + id);
+        }
         todoRepository.deleteById(id);
     }
 }
