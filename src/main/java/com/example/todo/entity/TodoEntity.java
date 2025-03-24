@@ -9,60 +9,50 @@ import java.time.LocalDateTime;
 public class TodoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
+    private String title;
+    private String description;
+    private boolean completed;
+    private LocalDateTime createdAt;
 
-    private String Title;
-    private String Description;
-    private Boolean Completed;
-    private LocalDateTime CreatedAt;
-
-    public  TodoEntity() {}
-
-    public TodoEntity (String Title, String Description){
-        this.Title = Title;
-        this.Description = Description;
-        this.Completed = false;
-        this.CreatedAt = LocalDateTime.now();
-    }
-    // Getters
+    // Getters and Setters
     public Long getId() {
-        return Id;
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTitle() {
-        return Title;
-    }
-
-    public String getDescription() {
-        return Description;
-    }
-
-    public boolean isCompleted() {
-        return Completed;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return CreatedAt;
-    }
-
-    // Setters
-    public void setId(Long id) {
-        this.Id = id;
+        return title;
     }
 
     public void setTitle(String title) {
-        this.Title = title;
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public void setDescription(String description) {
-        this.Description = description;
+        this.description = description;
+    }
+
+    public boolean isCompleted() {
+        return completed;
     }
 
     public void setCompleted(boolean completed) {
-        this.Completed = completed;
+        this.completed = completed;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
     public void setCreatedAt(LocalDateTime createdAt) {
-        this.CreatedAt = createdAt;
+        this.createdAt = createdAt;
     }
 }
