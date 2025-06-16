@@ -1,0 +1,33 @@
+stages:
+  - analyze
+  - commit_result
+
+analyze_repo:
+  stage: analyze
+  image: python:3.10
+  script:
+    - pip install -r requirements.txt || true
+    - python analyze_repo.py
+  artifacts:
+    paths:
+      - analysis_result.json
+    expire_in: 1 hour
+
+commit_result_file:
+  stage: commit_result
+  image: alpine:latest
+  dependencies:
+    - analyze_repo
+  script:
+    - apk add git
+    - git config --global user.email "ci@example.com"
+    - git config --global user.name "CI Bot"
+    - git clone "$CI_REPOSITORY_URL" repo
+    - cp analysis_result.json repo/
+    - cd repo
+    - git checkout $CI_COMMIT_BRANCH
+    - git add analysis_result.json
+    - git commit -m "Update analysis result file [ci skip]" || echo "No changes"
+    - git push "https://${CI_REPOSITORY_USER}:${CI_JOB_TOKEN}@gitlab.com/${CI_PROJECT_PATH}.git" HEAD:$CI_COMMIT_BRANCH
+  only:
+    - branches

@@ -1,0 +1,14 @@
+{
+  "alias": {},
+  "entryFilePath": "src\\main\\java\\com\\example\\todo\\TodoApplication.java",
+  "resolveExtensions": [
+    ".js",
+    ".jsx",
+    ".ts",
+    ".tsx",
+    ".vue",
+    ".scss",
+    ".less",
+    ".java"
+  ]
+}
